@@ -19,11 +19,5 @@ fun main() {
 
     val env = Json.decodeFromString<Env>(Path("src/main/resources/env.json").readText())
 
-    val headers = HeadersBuilder().apply {
-        set("Content-Type", "application/json")
-        set("Accept", "application/json")
-        set("Authorization", "Bearer ${env.token}")
-    }
-
     val characterName = "Grian"
 }
