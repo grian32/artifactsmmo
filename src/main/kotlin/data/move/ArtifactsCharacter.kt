@@ -1,7 +1,9 @@
 package me.grian.data.move
 
 import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 
+@Serializable
 data class ArtifactsCharacter(
     val name: String,
     val account: String,

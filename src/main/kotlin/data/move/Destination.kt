@@ -1,5 +1,8 @@
 package me.grian.data.move
 
+import kotlinx.serialization.Serializable
+
+@Serializable
 data class Destination(
     val name: String,
     val skin: String,

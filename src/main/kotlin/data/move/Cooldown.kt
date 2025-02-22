@@ -1,7 +1,9 @@
 package me.grian.data.move
 
 import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 
+@Serializable
 data class Cooldown( 
     @SerialName("total_seconds")
     val totalSeconds: Long,
