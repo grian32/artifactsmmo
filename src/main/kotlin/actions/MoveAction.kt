@@ -1,11 +1,9 @@
 package me.grian.actions
 
 import io.ktor.client.*
-import io.ktor.client.call.*
 import io.ktor.client.request.*
-import me.grian.applyBasicHeaders
+import io.ktor.client.statement.*
 import me.grian.data.move.MoveRequest
-import me.grian.data.move.MoveResponse
 
 class MoveAction(
     private val client: HttpClient,
@@ -14,7 +12,7 @@ class MoveAction(
 ) {
     private fun endpoint(name: String): String = "https://api.artifactsmmo.com/my/$name/action/move"
 
-    suspend fun move(x: Int, y: Int): MoveResponse {
+    suspend fun move(x: Int, y: Int): HttpResponse {
         val requestBody =  MoveRequest(
             x,
             y
@@ -30,6 +28,6 @@ class MoveAction(
             setBody(requestBody)
         }
 
-        return request.body<MoveResponse>()
+        return request
     }
 }
