@@ -1,5 +1,8 @@
 package me.grian
 
+import io.ktor.client.*
+import io.ktor.client.engine.cio.*
+
 fun main() {
-    println("Hello World!")
+    val client = HttpClient(CIO)
 }
