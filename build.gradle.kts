@@ -20,7 +20,7 @@ dependencies {
     implementation("io.ktor:ktor-client-cio:$ktor_version")
     implementation("io.ktor:ktor-client-content-negotiation:$ktor_version")
     implementation("io.ktor:ktor-serialization-kotlinx-json:$ktor_version")
-    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json$serialization_version")
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:$serialization_version")
 }
 
 tasks.test {
@@ -29,4 +29,8 @@ tasks.test {
 
 kotlin {
     jvmToolchain(21)
+}
+
+application {
+    mainClass = "me.grian.MainKt"
 }
