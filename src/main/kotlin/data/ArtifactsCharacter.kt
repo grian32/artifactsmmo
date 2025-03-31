@@ -1,7 +1,8 @@
-package me.grian.data.move
+package me.grian.data
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
+import me.grian.data.InventoryItem
 
 @Serializable
 data class ArtifactsCharacter(

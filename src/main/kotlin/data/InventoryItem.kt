@@ -1,4 +1,4 @@
-package me.grian.data.move
+package me.grian.data
 
 import kotlinx.serialization.Serializable
 

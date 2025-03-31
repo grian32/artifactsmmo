@@ -1,10 +1,10 @@
-package me.grian.data.move
+package me.grian.data
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class Cooldown( 
+data class Cooldown(
     @SerialName("total_seconds")
     val totalSeconds: Long,
     @SerialName("remaining_seconds")
@@ -12,5 +12,5 @@ data class Cooldown(
     @SerialName("started_at")
     val startedAt: String,
     val expiration: String,
-    val reason: String, 
+    val reason: String,
 )
