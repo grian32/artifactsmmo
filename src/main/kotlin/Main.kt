@@ -1,5 +1,6 @@
 package me.grian
 
+import io.github.classgraph.ClassGraph
 import io.ktor.client.*
 import io.ktor.client.call.*
 import io.ktor.client.engine.cio.*
@@ -8,9 +9,11 @@ import io.ktor.http.*
 import io.ktor.serialization.kotlinx.json.*
 import kotlinx.serialization.json.Json
 import me.grian.actions.MoveAction
+import me.grian.commands.api.Command
 import me.grian.data.ErrorResponse
 import me.grian.data.move.MoveResponse
 import java.util.Scanner
+import kotlin.collections.set
 import kotlin.io.path.Path
 import kotlin.io.path.readText
 
@@ -25,47 +28,38 @@ suspend fun main() {
 
     val characterName = "Grian"
 
-    val moveAction = MoveAction(
-        client,
-        env.token,
-        characterName
-    )
+    val commands: MutableMap<String, Command> = mutableMapOf()
+
+
+    ClassGraph().enableAllInfo().scan().use { result ->
+        val commandList = result.getSubclasses(Command::class.java)
+
+        commandList.forEach { command ->
+            val commandClass = command.loadClass(Command::class.java)
+            val instance = commandClass.getConstructor(
+                HttpClient::class.java,
+                String::class.java,
+                String::class.java
+            )
+                .newInstance(client, env.token, characterName)
+
+            commands[instance.name] = instance
+        }
+
+    }
+
 
     val sc = Scanner(System.`in`)
 
     while (sc.hasNextLine()) {
         val command = sc.nextLine()
 
-        when {
-            // TODO: refactor this as its a very basic cmd system rn.
-            command.startsWith("move") -> {
-                val xAndY = command.trim().split(" ").drop(1).map(String::toInt)
+        val commandName = command.split(" ")[0]
 
-                val x = xAndY[0]
-                val y = xAndY[1]
-
-                val response = moveAction.move(x, y)
-
-                when (response.status) {
-                    HttpStatusCode.OK -> {
-                        val body = response.body<MoveResponse>()
-
-                        if (body.data.destination.x == x && body.data.destination.y == y) {
-                            println("Successfully moved to square (${x}, ${y})")
-                        } else {
-                            println("Something went wrong when trying to move to square (${x}, ${y})")
-                        }
-                    }
-                    else -> {
-                        try {
-                            val body = response.body<ErrorResponse>()
-                            println("Could not move due to the following reason: ${body.error.message}")
-                        } catch (e: Exception) {
-                            println("Something went wrong: ${e.message}")
-                        }
-                    }
-                }
-            }
+        if (commands.containsKey(commandName)) {
+            commands[commandName]!!.execute(command)
+        } else {
+            println("Unrecognized Command")
         }
     }
 }
